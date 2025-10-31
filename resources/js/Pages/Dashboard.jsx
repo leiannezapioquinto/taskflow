@@ -1,26 +1,56 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import React, { useEffect, useState } from "react";
+import Sidebar from "../components/Sidebar";
+import TaskCard from "../components/TaskCard";
+import TaskForm from "../components/TaskForm";
 
 export default function Dashboard() {
-    return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Dashboard
-                </h2>
-            }
-        >
-            <Head title="Dashboard" />
+  const [tasks, setTasks] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            You're logged in!
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </AuthenticatedLayout>
-    );
+  const fetchTasks = async () => {
+    const res = await fetch("/api/tasks");
+    const data = await res.json();
+    setTasks(data);
+  };
+
+  const fetchCategories = async () => {
+    const res = await fetch("/api/categories");
+    const data = await res.json();
+    setCategories(data);
+  };
+
+  useEffect(() => {
+    fetchTasks();
+    fetchCategories();
+  }, []);
+
+  const handleTaskAdded = newTask => setTasks([newTask, ...tasks]);
+  const handleDelete = async id => {
+    await fetch(`/api/tasks/${id}`, { method: "DELETE" });
+    setTasks(tasks.filter(t => t.id !== id));
+  };
+
+  const filteredTasks = selectedCategory
+    ? tasks.filter(t => t.category_id === selectedCategory)
+    : tasks;
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row gap-6 p-6">
+      <Sidebar
+        categories={categories}
+        onSelectCategory={setSelectedCategory}
+      />
+
+      <div className="flex-1">
+        <TaskForm categories={categories} onTaskAdded={handleTaskAdded} />
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filteredTasks.map(task => (
+            <TaskCard key={task.id} task={task} onDelete={handleDelete} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
