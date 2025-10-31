@@ -14,8 +14,7 @@ use Inertia\Inertia;
 //     ]);
 // });
 
-Route::view('/', 'app');
-
+Route::view('/{path?}', 'app')->where('path', '.*');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

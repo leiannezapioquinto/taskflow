@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function TaskForm({ categories, onTaskAdded }) {
+export default function TaskForm({ categories, onTaskAdded, url }) {
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -8,6 +9,7 @@ export default function TaskForm({ categories, onTaskAdded }) {
     due_date: "",
     category_id: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -32,6 +34,11 @@ export default function TaskForm({ categories, onTaskAdded }) {
         due_date: "",
         category_id: "",
       });
+
+      // Redirect after success
+      if (url) {
+        navigate(url);
+      }
     }
   };
 
