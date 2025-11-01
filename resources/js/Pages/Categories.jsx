@@ -7,7 +7,7 @@ import Sidebar from "../components/Sidebar";
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState("add"); // 'add' | 'edit'
+  const [modalMode, setModalMode] = useState("add");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -52,32 +52,19 @@ export default function Categories() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900 relative">
-      {/* Sidebar for desktop */}
-      <div className="hidden md:block fixed left-0 top-0 h-full w-64">
-        <Sidebar />
-      </div>
-
-      {/* Mobile Sidebar (overlay) */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 bg-black/40 md:hidden" onClick={() => setSidebarOpen(false)}>
-          <div
-            className="absolute left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Sidebar />
-          </div>
-        </div>
-      )}
+      {/* Sidebar */}
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       <main className="flex-1 md:ml-64 p-4 md:p-8 transition-all duration-300">
         {/* Header */}
+
         <div className="flex justify-between items-center mb-6">
-          {/* Hamburger for mobile */}
+        {/* Sidebar toggle */}
           <button
-            className="md:hidden text-gray-700 dark:text-gray-200"
+            className="md:hidden flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="w-6 h-6" />
+            <Menu size={22} />
           </button>
 
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100">
