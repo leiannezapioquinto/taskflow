@@ -44,43 +44,19 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
         >
             <span className="inline-flex items-center space-x-2">
               <House className="w-5 h-5" />
-              <span>Home</span>
+              <span>Notes</span>
             </span>
         </Link>
 
-        {/* Categories Dropdown */}
-        <div>
-          <button
-            className="w-full flex justify-between items-center px-6 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-            onClick={() => setCategoriesOpen(!categoriesOpen)}
-          >
-            <span className="inline-flex items-center space-x-2">
-              <Folder className="w-5 h-5" />
-              <span>Categories</span>
-            </span>
-            <span className="ml-2">{categoriesOpen ? "▲" : "▼"}</span>
-          </button>
-
-          {categoriesOpen && (
-            <div className="pl-8 mt-1 space-y-1">
-              {categories.length > 0 ? (
-                categories.map((cat) => (
-                  <Link
-                    key={cat.id}
-                    to={`/categories/${cat.id}`}
-                    className="block px-4 py-1 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                  >
-                    {cat.name}
-                  </Link>
-                ))
-              ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-sm px-4 py-1">
-                  No categories
-                </p>
-              )}
-            </div>
-          )}
-        </div>
+        <Link
+                  to="/categories"
+                  className="block px-6 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                    <span className="inline-flex items-center space-x-2">
+                      <Folder className="w-5 h-5" />
+                      <span>Categories</span>
+                    </span>
+                </Link>
 
         <Link
           to="/settings"

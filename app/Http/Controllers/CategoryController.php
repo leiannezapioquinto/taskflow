@@ -16,8 +16,11 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'color' => 'nullable|string|max:20',
         ]);
+
+        $validated['description'] = $request->input('description', '');
 
         $category = Category::create($validated);
 
