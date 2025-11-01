@@ -154,7 +154,6 @@ export default function TaskDetails() {
         )}
       </AnimatePresence>
 
-      {/* Card */}
       <div
         className="relative z-13 w-full max-w-5xl p-10 rounded-2xl backdrop-blur-lg
           bg-white/75 dark:bg-gray-800/70 border border-white/50 dark:border-gray-700/50
@@ -175,7 +174,6 @@ export default function TaskDetails() {
               </span>
             </div>
 
-            {/* ✅ Render rich text safely */}
             <div
               className="prose dark:prose-invert max-w-none mb-6"
               dangerouslySetInnerHTML={{
