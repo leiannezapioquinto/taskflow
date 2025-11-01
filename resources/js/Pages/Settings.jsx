@@ -40,12 +40,12 @@ export default function Settings() {
             Settings
           </h1>
 
-          <div className="flex items-center justify-between dark:bg-gray-400 p-4 border dark:border-gray-700 rounded-xl">
+          <div className="flex items-center justify-between dark:bg-gray-800 p-4 border dark:border-gray-700 rounded-xl">
             <div>
-              <h2 className="text-lg font-medium text-gray-800 dark:text-black-100">
+              <h2 className="text-lg font-medium text-gray-800 dark:text-gray-100">
                 Dark Mode
               </h2>
-              <p className="text-sm text-gray-600 dark:text-black-400">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Toggle between light and dark theme.
               </p>
             </div>

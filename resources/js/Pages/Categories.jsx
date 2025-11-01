@@ -95,7 +95,7 @@ export default function Categories() {
               categories.map((cat) => (
                 <div
                   key={cat.id}
-                  className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-4 rounded-xl bg-white dark:bg-gray-800 shadow-sm border dark:border-gray-700"
+                  className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-4 rounded-xl bg-white dark:bg-gray-800 shadow-sm border dark:border-gray-500"
                 >
                   <div className="flex items-center gap-3">
                     <span
