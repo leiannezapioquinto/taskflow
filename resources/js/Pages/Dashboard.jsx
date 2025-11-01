@@ -24,6 +24,19 @@ export default function Dashboard() {
     task.title.toLowerCase().includes(search.toLowerCase())
   );
 
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-500 text-white";
+      case "medium":
+        return "bg-yellow-400 text-gray-900";
+      case "low":
+        return "bg-green-500 text-white";
+      default:
+        return "bg-gray-300 text-gray-800";
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       {/* Sidebar Component */}
@@ -67,9 +80,15 @@ export default function Dashboard() {
                 <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
                   {task.description}
                 </p>
-                <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-                  Priority: {task.priority}
-                </div>
+                <div className="mt-3 flex items-center gap-2 text-sm">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityColor(
+                        task.priority
+                      )}`}
+                    >
+                      {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                    </span>
+                  </div>
               </Link>
             ))
           ) : (
