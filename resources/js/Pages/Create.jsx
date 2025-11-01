@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import SuccessModal from "../components/SuccessModal";
 
 export default function CreateTask() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function CreateTask() {
     category_id: "",
   });
   const [categories, setCategories] = useState([]);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -45,13 +47,13 @@ export default function CreateTask() {
     });
 
     if (res.ok) {
-      navigate("/");
+      setShowSuccess(true);
+      setTimeout(() => navigate("/"), 1800);
     } else {
       alert("Failed to create task.");
     }
   };
 
-  // Toolbar configuration (customizable)
   const quillModules = {
     toolbar: [
       ["bold", "italic", "underline", "strike"],
@@ -62,7 +64,14 @@ export default function CreateTask() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center p-4 relative">
+      {/* ✅ Externalized Success Modal */}
+      <SuccessModal
+        show={showSuccess}
+        title="🎉 Task Created!"
+        message="Your task was successfully added."
+      />
+
       <div className="w-full max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
         <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">
           Create Task
