@@ -7,6 +7,12 @@
 
       @viteReactRefresh
       @vite(['resources/js/main.jsx'])
+
+      <script>
+        if (localStorage.theme === "dark") {
+          document.documentElement.classList.add("dark");
+        }
+      </script>
   </head>
   <body class="antialiased">
       <div id="app"></div>
