@@ -3,7 +3,9 @@
   <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Task Manager</title>
+      <link rel="icon" href="{{ asset('taskflow-logo.png') }}" type="image/x-icon">
+
+      <title>TaskFlow</title>
 
       @viteReactRefresh
       @vite(['resources/js/main.jsx'])
