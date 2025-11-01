@@ -1,6 +1,6 @@
 // components/TaskFilters.jsx
 import React from "react";
-import { Filter } from "lucide-react";
+import { Filter, ChevronDown } from "lucide-react";
 
 export default function TaskFilters({
   categories,
@@ -17,30 +17,48 @@ export default function TaskFilters({
       </div>
 
       {/* Category Filter */}
-      <select
-        value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
-        className="p-2.5 px-3 rounded-lg text-sm border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-      >
-        <option value="all">All Categories</option>
-        {categories.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.name}
-          </option>
-        ))}
-      </select>
+      <div className="relative">
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="appearance-none p-2.5 pr-10 rounded-lg text-sm border border-gray-300 dark:border-gray-700
+                     bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100
+                     focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none
+                     transition-all duration-200"
+        >
+          <option value="all">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          size={18}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+        />
+      </div>
 
       {/* Priority Filter */}
-      <select
-        value={selectedPriority}
-        onChange={(e) => setSelectedPriority(e.target.value)}
-        className="p-2.5 px-3 rounded-lg text-sm border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-      >
-        <option value="all">All Priorities</option>
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
+      <div className="relative">
+        <select
+          value={selectedPriority}
+          onChange={(e) => setSelectedPriority(e.target.value)}
+          className="appearance-none p-2.5 pr-10 rounded-lg text-sm border border-gray-300 dark:border-gray-700
+                     bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100
+                     focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none
+                     transition-all duration-200"
+        >
+          <option value="all">All Priorities</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <ChevronDown
+          size={18}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+        />
+      </div>
     </div>
   );
 }
