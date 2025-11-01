@@ -77,9 +77,10 @@ export default function Dashboard() {
                 <h2 className="font-semibold text-lg text-gray-800 dark:text-gray-100 mb-2">
                   {task.title}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
-                  {task.description}
-                </p>
+                <div
+                  className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 prose dark:prose-invert max-w-none"
+                  dangerouslySetInnerHTML={{ __html: task.description }}
+                />
                 <div className="mt-3 flex items-center gap-2 text-sm">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityColor(

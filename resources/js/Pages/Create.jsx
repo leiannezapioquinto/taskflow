@@ -1,6 +1,8 @@
 // src/pages/CreateTask.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function CreateTask() {
   const navigate = useNavigate();
@@ -29,14 +31,16 @@ export default function CreateTask() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleDescriptionChange = (value) => {
+    setForm((prev) => ({ ...prev, description: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const res = await fetch("/api/tasks", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
 
@@ -45,6 +49,16 @@ export default function CreateTask() {
     } else {
       alert("Failed to create task.");
     }
+  };
+
+  // Toolbar configuration (customizable)
+  const quillModules = {
+    toolbar: [
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"],
+    ],
   };
 
   return (
@@ -73,12 +87,12 @@ export default function CreateTask() {
             <label className="block text-gray-700 dark:text-gray-200 mb-1">
               Description
             </label>
-            <textarea
-              name="description"
+            <ReactQuill
+              theme="snow"
               value={form.description}
-              onChange={handleChange}
-              rows={4}
-              className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring focus:ring-indigo-400"
+              onChange={handleDescriptionChange}
+              modules={quillModules}
+              className="bg-white dark:bg-gray-700 dark:text-gray-100 rounded-lg"
             />
           </div>
 

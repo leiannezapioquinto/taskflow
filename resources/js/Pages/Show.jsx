@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function TaskDetails() {
   const { id } = useParams();
@@ -60,7 +62,6 @@ export default function TaskDetails() {
   const handleSave = async (e) => {
     e.preventDefault();
 
-    // If adding a new category first
     let categoryId = form.category_id;
     if (addingCategory && newCategory.trim()) {
       const res = await fetch("/api/categories", {
@@ -98,11 +99,19 @@ export default function TaskDetails() {
     setTimeout(() => setShowToast(false), 2000);
   };
 
-  // Color map for priorities
   const priorityColors = {
     low: "bg-green-500",
     medium: "bg-yellow-500",
     high: "bg-red-500",
+  };
+
+  const quillModules = {
+    toolbar: [
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"],
+    ],
   };
 
   if (loading)
@@ -130,7 +139,6 @@ export default function TaskDetails() {
         className="absolute inset-0 bg-cover bg-center hidden dark:block"
         style={{ backgroundImage: "url('/background-dark.jpg')", opacity: 0.5 }}
       ></div>
-
       <div className="absolute inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-sm"></div>
 
       <AnimatePresence>
@@ -147,11 +155,11 @@ export default function TaskDetails() {
       </AnimatePresence>
 
       {/* Card */}
-        <div
-          className="relative z-13 w-full max-w-5xl p-10 rounded-2xl backdrop-blur-lg
+      <div
+        className="relative z-13 w-full max-w-5xl p-10 rounded-2xl backdrop-blur-lg
           bg-white/75 dark:bg-gray-800/70 border border-white/50 dark:border-gray-700/50
           shadow-[0_8px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.6)]"
-        >
+      >
         {!isEditing ? (
           <>
             <h1 className="text-3xl font-bold mb-2 text-gray-800 dark:text-gray-100">
@@ -167,9 +175,13 @@ export default function TaskDetails() {
               </span>
             </div>
 
-            <p className="text-gray-700 dark:text-gray-200 mb-6 whitespace-pre-wrap">
-              {task.description || "No description provided."}
-            </p>
+            {/* ✅ Render rich text safely */}
+            <div
+              className="prose dark:prose-invert max-w-none mb-6"
+              dangerouslySetInnerHTML={{
+                __html: task.description || "<p>No description provided.</p>",
+              }}
+            ></div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
@@ -192,7 +204,6 @@ export default function TaskDetails() {
               </div>
             </div>
 
-            {/* Last Updated */}
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
               Last updated:{" "}
               {task.updated_at
@@ -200,7 +211,6 @@ export default function TaskDetails() {
                 : "Unknown"}
             </p>
 
-            {/* Buttons */}
             <div className="flex justify-between">
               <button
                 onClick={() => navigate("/")}
@@ -241,16 +251,14 @@ export default function TaskDetails() {
               className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
             />
 
-            <textarea
-              name="description"
+            {/* ✅ Replace textarea with ReactQuill */}
+            <ReactQuill
+              theme="snow"
               value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
-              placeholder="Description"
-              rows="4"
-              className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-            ></textarea>
+              onChange={(value) => setForm({ ...form, description: value })}
+              modules={quillModules}
+              className="bg-white dark:bg-gray-700 dark:text-gray-100 rounded-lg"
+            />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <select
@@ -273,7 +281,7 @@ export default function TaskDetails() {
               />
             </div>
 
-            {/* Category selection */}
+            {/* Category */}
             <div>
               {!addingCategory ? (
                 <>
