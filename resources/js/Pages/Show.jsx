@@ -175,7 +175,7 @@ export default function TaskDetails() {
             </div>
 
             <div
-              className="prose dark:prose-invert max-w-none mb-6"
+              className="prose dark:prose-invert dark:text-gray-100 max-w-none mb-6"
               dangerouslySetInnerHTML={{
                 __html: task.description || "<p>No description provided.</p>",
               }}
@@ -249,7 +249,6 @@ export default function TaskDetails() {
               className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
             />
 
-            {/* ✅ Replace textarea with ReactQuill */}
             <ReactQuill
               theme="snow"
               value={form.description}
