@@ -37,6 +37,24 @@ export default function Dashboard() {
     }
   };
 
+  function getCategoryStyle(color) {
+    const hex = color?.replace("#", "") || "9ca3af";
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    // Calculate relative luminance (brightness)
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    const textColor = brightness > 150 ? "#000" : "#fff"; // black text for light backgrounds, white for dark
+
+    return {
+      backgroundColor: `#${hex}`,
+      color: textColor,
+      borderColor: `#${hex}`,
+    };
+  }
+
+
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       {/* Sidebar Component */}
@@ -81,15 +99,26 @@ export default function Dashboard() {
                   className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 prose dark:prose-invert max-w-none"
                   dangerouslySetInnerHTML={{ __html: task.description }}
                 />
-                <div className="mt-3 flex items-center gap-2 text-sm">
+                <div className="mt-3 flex items-center gap-2 text-sm flex-wrap">
+                  {/* Category Tag */}
+                  {task.category && (
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityColor(
-                        task.priority
-                      )}`}
+                      className="px-3 py-1 rounded-full text-xs font-semibold border"
+                      style={getCategoryStyle(task.category.color)}
                     >
-                      {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                      {task.category.name}
                     </span>
-                  </div>
+                  )}
+
+                  {/* Priority Tag */}
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityColor(
+                      task.priority
+                    )}`}
+                  >
+                    {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                  </span>
+                </div>
               </Link>
             ))
           ) : (
