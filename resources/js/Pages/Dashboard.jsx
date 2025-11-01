@@ -1,15 +1,24 @@
+// pages/Dashboard.jsx
 import React, { useState, useEffect } from "react";
-import { Menu, Search, Plus } from "lucide-react";
+import { Menu, Plus, Search } from "lucide-react"; // ✅ Added Search import
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import TaskCard from "../components/TaskCard";
+import TaskFilters from "../components/TaskFilters";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // filters
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedPriority, setSelectedPriority] = useState("all");
 
   useEffect(() => {
     fetchTasks();
+    fetchCategories();
   }, []);
 
   const fetchTasks = async () => {
@@ -20,107 +29,80 @@ export default function Dashboard() {
     }
   };
 
-  const filteredTasks = tasks.filter((task) =>
-    task.title.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-500 text-white";
-      case "medium":
-        return "bg-yellow-400 text-gray-900";
-      case "low":
-        return "bg-green-500 text-white";
-      default:
-        return "bg-gray-300 text-gray-800";
+  const fetchCategories = async () => {
+    const res = await fetch("/api/categories");
+    if (res.ok) {
+      const data = await res.json();
+      setCategories(data);
     }
   };
 
-  function getCategoryStyle(color) {
-    const hex = color?.replace("#", "") || "9ca3af";
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = task.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
-    // Calculate relative luminance (brightness)
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    const textColor = brightness > 150 ? "#000" : "#fff"; // black text for light backgrounds, white for dark
+    const matchesCategory =
+      selectedCategory === "all" ||
+      (task.category && task.category.id === parseInt(selectedCategory));
 
-    return {
-      backgroundColor: `#${hex}`,
-      color: textColor,
-      borderColor: `#${hex}`,
-    };
-  }
+    const matchesPriority =
+      selectedPriority === "all" || task.priority === selectedPriority;
 
+    return matchesSearch && matchesCategory && matchesPriority;
+  });
+
+  const clearFilters = () => {
+    setSearch("");
+    setSelectedCategory("all");
+    setSelectedPriority("all");
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-      {/* Sidebar Component */}
+      {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col md:ml-64">
         {/* Header */}
-        <header className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow">
+        <header className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+          {/* Sidebar toggle */}
           <button
-            className="md:hidden text-gray-700 dark:text-gray-200"
+            className="md:hidden flex items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu />
+            <Menu size={22} />
           </button>
 
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-3 text-gray-400" />
+          {/* Search bar */}
+          <div className="relative w-full md:max-w-md">
+            <Search className="absolute left-3 top-3 text-gray-400" size={18} />
             <input
               type="text"
               placeholder="Search tasks..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-indigo-400 dark:bg-gray-700 dark:text-gray-100"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 transition-colors"
             />
           </div>
         </header>
 
+        {/* Filters */}
+        <div className="p-4 md:p-6">
+          <TaskFilters
+            categories={categories}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            selectedPriority={selectedPriority}
+            setSelectedPriority={setSelectedPriority}
+          />
+        </div>
+
         {/* Task Grid */}
         <main className="flex-1 p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTasks.length > 0 ? (
-            filteredTasks.map((task) => (
-              <Link
-                to={`/tasks/${task.id}`}
-                key={task.id}
-                className="p-4 bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-lg transition-all duration-200"
-              >
-                <h2 className="font-semibold text-lg text-gray-800 dark:text-gray-100 mb-2">
-                  {task.title}
-                </h2>
-                <div
-                  className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 prose dark:prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ __html: task.description }}
-                />
-                <div className="mt-3 flex items-center gap-2 text-sm flex-wrap">
-                  {/* Category Tag */}
-                  {task.category && (
-                    <span
-                      className="px-3 py-1 rounded-full text-xs font-semibold border"
-                      style={getCategoryStyle(task.category.color)}
-                    >
-                      {task.category.name}
-                    </span>
-                  )}
-
-                  {/* Priority Tag */}
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityColor(
-                      task.priority
-                    )}`}
-                  >
-                    {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                  </span>
-                </div>
-              </Link>
-            ))
+            filteredTasks.map((task) => <TaskCard key={task.id} task={task} />)
           ) : (
             <p className="text-gray-500 dark:text-gray-400">No tasks found.</p>
           )}
